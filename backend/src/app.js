@@ -3,6 +3,8 @@ import cors from "cors";
 import authRoute from "./routes/auth.route.js";
 import contractRoutes from "./routes/contract.routes.js";
 import reminderRoutes from "./routes/reminder.routes.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 
