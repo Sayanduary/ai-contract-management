@@ -1,5 +1,4 @@
 import prisma from "../config/db.js";
-
 export const searchSimilarChunks = async (
   contractId,
   queryEmbedding,
@@ -17,19 +16,30 @@ export const searchSimilarChunks = async (
 
   const vector = `[${queryEmbedding.join(",")}]`;
 
-  const results = await prisma.$queryRaw`
-    SELECT
-      id,
-      "contractId",
-      content,
-      "chunkIndex",
-      1 - (embedding <=> ${vector}::vector) AS similarity
-    FROM "ContractChunk"
-    WHERE "contractId" = ${contractId}
-      AND embedding IS NOT NULL
-    ORDER BY embedding <=> ${vector}::vector
-    LIMIT ${topK}
-  `;
+  console.log("Contract ID:", contractId);
+  console.log("Query embedding length:", queryEmbedding.length);
+  console.log("Query vector prefix:", vector.slice(0, 100));
+
+  const results = await prisma.$queryRawUnsafe(
+    `
+      SELECT
+        id,
+        "contractId",
+        content,
+        "chunkIndex",
+        1 - (embedding <=> $2::vector) AS similarity
+      FROM "ContractChunk"
+      WHERE "contractId" = $1
+        AND embedding IS NOT NULL
+      ORDER BY embedding <=> $2::vector
+      LIMIT $3
+    `,
+    contractId,
+    vector,
+    topK,
+  );
+
+  console.log("Vector search results:", results);
 
   return results;
 };
