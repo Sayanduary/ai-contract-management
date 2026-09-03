@@ -68,10 +68,6 @@ const Home = () => {
 
       {/* Hero Section */}
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-16 sm:py-24 text-center max-w-4xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-medium mb-6">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Intelligent Contract Analysis & RAG Assistant</span>
-        </div>
 
         <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight mb-6">
           Analyze contracts, identify risks, and ask questions using AI.

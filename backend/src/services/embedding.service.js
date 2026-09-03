@@ -22,7 +22,17 @@ export const generateEmbedding = async (text) => {
   const result = model.embed([text]);
 
   for await (const embeddings of result) {
-    return Array.from(embeddings[0]);
+    const embedding = Array.from(embeddings[0]);
+
+    console.log("Generated embedding dimensions:", embedding.length);
+
+    if (embedding.length !== 384) {
+      throw new Error(
+        `Invalid embedding dimensions: expected 384, received ${embedding.length}`
+      );
+    }
+
+    return embedding;
   }
 
   throw new Error("Failed to generate embedding");
@@ -35,8 +45,23 @@ export const generateEmbeddings = async (texts) => {
 
   const result = model.embed(texts);
 
-  for await (const embedding of result) {
-    embeddings.push(Array.from(embedding));
+  for await (const batch of result) {
+    for (const embedding of batch) {
+      const vector = Array.from(embedding);
+
+      console.log(
+        "Generated embedding dimensions:",
+        vector.length
+      );
+
+      if (vector.length !== 384) {
+        throw new Error(
+          `Invalid embedding dimensions: expected 384, received ${vector.length}`
+        );
+      }
+
+      embeddings.push(vector);
+    }
   }
 
   return embeddings;
